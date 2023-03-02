@@ -19,12 +19,12 @@
 # # Untrusted (Landing)
 
 module "test-vms" {
-  source     = "../modules/compute-vm"
-  count = 2 # !!!
+  source = "../modules/compute-vm"
+  count = var.instances
   project_id = var.project_id
   zone       = var.source_zone # TODO
   name       = "test-vm-${count.index}"
-  instance_type = "f1.micro"
+  instance_type = "f1-micro"
   network_interfaces = [{
     network    = module.source-vpc.self_link
     subnetwork = module.source-vpc.subnet_self_links["${var.source_region}/source-s1"]

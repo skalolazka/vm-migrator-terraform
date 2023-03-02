@@ -36,3 +36,9 @@ variable "source_zone" { # TODO
   type = string
   default = "europe-west5-a"
 }
+
+variable "instances" {
+  description = "Number of instances to create"
+  type = number
+  default = 1
+}
