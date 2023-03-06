@@ -8,8 +8,9 @@ terraform apply
 
 To delete all instances:
 ```
-# change zone to yours
-gcloud compute instances list --project sap-dlm-galaxy-test | grep -v NAME | cut -d' ' -f1 | perl -ple 's/(.*)/gcloud compute instances delete $1 --project sap-dlm-galaxy-test --zone europe-west4-a --quiet/' > to_delete.sh
+# change zone to yours, edit project ID
+export $PROJECT=NOT_PUBLIC
+gcloud compute instances list --project $PROJECT | grep -v NAME | cut -d' ' -f1 | perl -ple 's/(.*)/gcloud compute instances delete $1 --project $PROJECT --zone europe-west4-a --quiet/' > to_delete.sh
 sh to_delete.sh
 ```
 
