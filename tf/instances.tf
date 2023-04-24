@@ -33,5 +33,83 @@ module "test-vms" {
   boot_disk = {
     image = "projects/debian-cloud/global/images/family/debian-10"
   }
+  # disks: SSD 400G, HDD 300G
+  attached_disks = [
+    {
+      name        = "ssd"
+      size        = "400"
+      source_type = null
+      options = {
+        type = "pd-standard"
+      }
+    },
+    {
+      name        = "hdd"
+      size        = "300"
+      source_type = null
+      options = {
+        type = "pd-ssd"
+      }
+    }
+  ]
+#  metadata = {
+#    startup-script = 
+#    #!/bin/bash
+#dd if=/dev/random of="sample.txt bs=1G count=300"
+#  }
 }
 
+/*
+module "test-vm-external" {
+  source = "../modules/compute-vm"
+  project_id = var.project_id
+  zone       = var.source_zone # TODO
+  name       = "test-vm-external"
+  instance_type = "f1-micro"
+  network_interfaces = [{
+    network    = module.source-vpc.self_link
+    subnetwork = module.source-vpc.subnet_self_links["${var.source_region}/source-s1"]
+    addresses = { external = "34.133.142.59", internal = "10.0.0.10" }
+  }]
+  service_account_create = true
+  boot_disk = {
+    image = "projects/debian-cloud/global/images/family/debian-10"
+  }
+  # disks: SSD 400G, HDD 300G
+  attached_disks = [
+    {
+      name        = "ssd"
+      size        = "400"
+      source_type = null
+      options = {
+        type = "pd-standard"
+      }
+    },
+    {
+      name        = "hdd"
+      size        = "300"
+      source_type = null
+      options = {
+        type = "pd-ssd"
+      }
+    }
+  ]
+  metadata = {
+    startup-script = <<EOF
+      #!/bin/bash
+      export HDD=$(lsblk | grep 300G | cut -d' ' -f1 | perl -ple 's/(.*)/sudo ls -lh \/dev\/$1/' | sh | cut -d'/' -f3)
+      export SSD=$(lsblk | grep 400G | cut -d' ' -f1 | perl -ple 's/(.*)/sudo ls -lh \/dev\/$1/' | sh | cut -d'/' -f3)
+      mkfs.ext4 /dev/$HDD
+      mkfs.ext4 /dev/$SSD
+      mkdir /mnt/hdd
+      mkdir /mnt/ssd
+      mount /dev/$HDD /mnt/hdd
+      mount /dev/$SSD /mnt/ssd
+      touch /mnt/hdd/bigblob.dat
+      touch /mnt/ssd/bigblob.dat
+      dd if=/dev/random of=/mnt/ssd/bigblob.dat bs=1M count=383K &
+      dd if=/dev/random of=/mnt/hdd/bigblob.dat bs=1M count=287K &
+    EOF
+  }
+}
+*/
