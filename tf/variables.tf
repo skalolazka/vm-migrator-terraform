@@ -22,7 +22,6 @@ variable "project_id" {
 variable "source_region" {
   description = "Source region"
   type = string
-  default = "europe-west5"
 }
 
 variable "target_region" {
@@ -34,11 +33,14 @@ variable "target_region" {
 variable "source_zone" { # TODO
   description = "Source zone"
   type = string
-  default = "europe-west5-a"
+}
+
+variable "target_zone" { # TODO
+  description = "Target zone"
+  type = string
 }
 
 variable "instances" {
   description = "Number of instances to create"
   type = number
-  default = 1
 }
