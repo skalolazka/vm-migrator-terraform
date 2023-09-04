@@ -16,10 +16,10 @@
 
 # tfdoc:file:description temporary instances for testing
 
-module "source-vpc" {
+module "source-new-vpc" {
   source     = "../modules/net-vpc"
   project_id = var.project_id
-  name       = "source-0"
+  name       = "source-new-0"
   mtu        = 1460
   dns_policy = {
     inbound = false
@@ -27,13 +27,13 @@ module "source-vpc" {
   }
   subnets = [
     {
-      ip_cidr_range = "10.1.0.0/18"
-      name          = "source-s1"
+      ip_cidr_range = "10.11.0.0/18"
+      name          = "source-new-s1"
       region        = var.source_region
     },
     {
-      ip_cidr_range = "10.2.0.0/18"
-      name          = "source-s2"
+      ip_cidr_range = "10.12.0.0/18"
+      name          = "source-new-s2"
       region        = var.source_region
     }
   ]
@@ -42,7 +42,7 @@ module "source-vpc" {
 module "target-vpc" {
   source     = "../modules/net-vpc"
   project_id = var.project_id
-  name       = "target-0"
+  name       = "target-new-0"
   mtu        = 1460
   dns_policy = {
     inbound = false
@@ -50,13 +50,13 @@ module "target-vpc" {
   }
   subnets = [
     {
-      ip_cidr_range = "10.3.0.0/18"
-      name          = "target-s1"
+      ip_cidr_range = "10.13.0.0/18"
+      name          = "target-new-s1"
       region        = var.target_region
     },
     {
-      ip_cidr_range = "10.4.0.0/18"
-      name          = "target-s2"
+      ip_cidr_range = "10.14.0.0/18"
+      name          = "target-new-s2"
       region        = var.target_region
     }
   ]
@@ -64,8 +64,8 @@ module "target-vpc" {
 
 resource "google_compute_firewall" "allow_iap_ssh" {
   project  = var.project_id
-  name = "allow-iap-ssh"
-  network = "source-0"
+  name = "allow-iap-ssh-new"
+  network = "source-new-0"
 
   allow {
     protocol = "tcp"
@@ -78,8 +78,8 @@ resource "google_compute_firewall" "allow_iap_ssh" {
 
 resource "google_compute_firewall" "allow_iap_ssh_t0" {
   project  = var.project_id
-  name = "allow-iap-ssh-t0"
-  network = "target-0"
+  name = "allow-iap-ssh-new-t0"
+  network = "target-new-0"
 
   allow {
     protocol = "tcp"
